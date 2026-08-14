@@ -59,7 +59,12 @@ function Index() {
   const [asc, setAsc] = useState(true);
   const [qty, setQty] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
+  const [stamp, setStamp] = useState("");
   const captureRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setStamp(new Date().toLocaleString("pl-PL"));
+  }, []);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
