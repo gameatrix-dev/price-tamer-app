@@ -73,6 +73,7 @@ export const ITEMS: Item[] = [
   { name: "Telefon", category: "Elektronika", price: 200 },
   { name: "Tłuszcz zwierzęcy", category: "Loot", price: 100 },
   { name: "Wiertarki", category: "Narzędzia", price: 1000 },
+  { name: "Wykrywacz metali", category: "Elektronika", price: 1500 },
   { name: "Wsuwki (stack 20x)", category: "Loot", price: 200 },
   { name: "Zamek", category: "Narzędzia", price: 700 },
 ];
