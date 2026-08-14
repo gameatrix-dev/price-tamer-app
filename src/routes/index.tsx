@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Baza cen skupu w SCUM z wyszukiwarką, sortowaniem i kalkulatorem łącznego kosztu.",
+          "Cennik skupu SCUM: baza produktów z wyszukiwarką, sortowaniem alfabetycznym i kalkulatorem kosztu skupu dla dowolnej liczby sztuk.",
       },
     ],
   }),

@@ -80,6 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "SCUM Trader" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { title: "SCUM Skup — Cennik przedmiotów i kalkulator" },
+      { property: "og:title", content: "SCUM Skup — Cennik przedmiotów i kalkulator" },
+      { name: "twitter:title", content: "SCUM Skup — Cennik przedmiotów i kalkulator" },
+      { name: "description", content: "Cennik skupu SCUM: baza produktów z wyszukiwarką, sortowaniem alfabetycznym i kalkulatorem kosztu skupu dla dowolnej liczby sztuk." },
+      { property: "og:description", content: "Cennik skupu SCUM: baza produktów z wyszukiwarką, sortowaniem alfabetycznym i kalkulatorem kosztu skupu dla dowolnej liczby sztuk." },
+      { name: "twitter:description", content: "Cennik skupu SCUM: baza produktów z wyszukiwarką, sortowaniem alfabetycznym i kalkulatorem kosztu skupu dla dowolnej liczby sztuk." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ffa9a20de98e4d796dacb2c555bdc312/id-preview-b4d3cf1d--b54de760-c346-412f-ab7b-e7c29bba1427.lovable.app-1786686306613.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ffa9a20de98e4d796dacb2c555bdc312/id-preview-b4d3cf1d--b54de760-c346-412f-ab7b-e7c29bba1427.lovable.app-1786686306613.png" },
     ],
     links: [
       {
