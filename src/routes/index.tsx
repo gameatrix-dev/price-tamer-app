@@ -299,7 +299,7 @@ function Index() {
             SCUM · Wycena skupu
           </h2>
           <p className="text-[11px] uppercase tech text-muted-foreground">
-            {new Date().toLocaleString("pl-PL")}
+            {stamp}
           </p>
           <table className="mt-5 w-full border-collapse text-sm">
             <thead>
