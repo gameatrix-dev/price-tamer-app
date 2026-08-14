@@ -74,11 +74,11 @@ function Index() {
     );
   }, [query, category, asc]);
 
-  const selected = ITEMS.filter((i) => (qty[i.name] ?? 0) > 0).map((i) => ({
-    ...i,
-    qty: qty[i.name],
-    sum: qty[i.name] * i.price,
-  }));
+  const selected = ITEMS.filter((i) => (qty[i.name] ?? 0) > 0).map((i) => {
+    const n = qty[i.name] ?? 0;
+    return { ...i, qty: n, sum: n * i.price };
+  });
+
   const totalPieces = selected.reduce((s, i) => s + i.qty, 0);
   const totalCost = selected.reduce((s, i) => s + i.sum, 0);
 
