@@ -53,14 +53,14 @@ export const ITEMS: Item[] = [
   { name: "Papier / pamiętnik (1 szt.)", category: "Loot", price: 80 },
   { name: "Piła łańcuchowa", category: "Narzędzia", price: 1000 },
   {
-    name: "Poćwiartowane w kawałki mięso — wilk / jeleń (całość)",
+    name: "Poćwiartowane w kawałki mięso — wilk / jeleń / dzik (całość)",
     category: "Loot",
-    price: 1000,
+    price: 2000,
   },
   {
     name: "Poćwiartowane w kawałki mięso z niedźwiedzia (całość)",
     category: "Loot",
-    price: 2000,
+    price: 3500,
   },
   { name: "Przecinarki", category: "Narzędzia", price: 1000 },
   { name: "Radio zielone", category: "Elektronika", price: 300 },
