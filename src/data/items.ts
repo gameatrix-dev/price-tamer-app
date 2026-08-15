@@ -24,7 +24,7 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const ITEMS: Item[] = [
-  { name: "Bandaż elastyczny", category: "Medyczne", price: 1000 },
+  { name: "Bandaż elastyczny", category: "Medyczne", price: 900 },
   { name: "Baterie", category: "Elektronika", price: 200 },
   { name: "Baterie do smartfona", category: "Elektronika", price: 200 },
   { name: "Duże kanistry", category: "Pojazdy", price: 1000 },
