@@ -5,8 +5,8 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.1.0",
-  notes: "Nowe ceny mięsa (wilk/jeleń/dzik 2000, niedźwiedź 3500).",
+  version: "1.1.1",
+  notes: "Test auto-aktualizacji: Bandaż elastyczny 900.",
   downloadUrl: "https://price-tamer-app.lovable.app/downloads/SkupMachety-windows-x64.zip",
 };
 
