@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDownAZ, Crosshair, ImageDown, Search, Trash2 } from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import { CHANGELOG } from "@/data/changelog";
 import heroImg from "@/assets/scum-hero.jpg";
 import catChemia from "@/assets/cat-chemia.jpg";
 import catElektronika from "@/assets/cat-elektronika.jpg";
@@ -66,15 +67,21 @@ export default function SkupApp() {
     if (!captureRef.current) return;
     setSaving(true);
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(captureRef.current, {
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(captureRef.current, {
+        pixelRatio: 2,
         backgroundColor: "#12181a",
-        scale: 2,
+        cacheBust: true,
+        skipFonts: true,
       });
       const link = document.createElement("a");
       link.download = `wycena-scum-${new Date().toISOString().slice(0, 10)}.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Nie udało się zapisać obrazu", err);
     } finally {
       setSaving(false);
     }
@@ -259,54 +266,181 @@ export default function SkupApp() {
           <p className="mt-3 px-1 text-[11px] text-muted-foreground">
             Ceny orientacyjne — dostosuj je w bazie do stawek swojego skupu.
           </p>
+
+          <div className="mt-4 rounded border border-border bg-card p-4">
+            <h2 className="text-sm font-semibold uppercase tech text-primary">
+              Ostatnie zmiany w cenniku
+            </h2>
+            <ul className="mt-3 space-y-3">
+              {CHANGELOG.map((entry) => (
+                <li key={entry.version}>
+                  <p className="text-[10px] uppercase tech text-muted-foreground">
+                    {entry.date} · v{entry.version}
+                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {entry.changes.map((c) => (
+                      <li key={c} className="text-xs text-foreground">
+                        • {c}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
         </aside>
       </main>
 
-      {/* Ukryty layout eksportowany do PNG */}
-      <div className="pointer-events-none fixed -left-[9999px] top-0">
+      {/* Ukryty layout eksportowany do PNG — tylko style inline (html2canvas nie obsługuje oklch) */}
+      <div
+        aria-hidden
+        style={{
+          position: "fixed",
+          left: -10000,
+          top: 0,
+          pointerEvents: "none",
+        }}
+      >
         <div
           ref={captureRef}
-          style={{ width: 720 }}
-          className="bg-background p-8"
+          style={{
+            width: 720,
+            backgroundColor: "#12181a",
+            padding: 32,
+            fontFamily: "Barlow, Arial, sans-serif",
+            color: "#e6ebe8",
+          }}
         >
-          <div className="h-2 w-full hazard-bar" />
-          <h2 className="mt-5 text-2xl font-bold uppercase text-primary">
+          <div
+            style={{
+              height: 8,
+              width: "100%",
+              background:
+                "repeating-linear-gradient(45deg, #c8a415 0 12px, #12181a 12px 24px)",
+            }}
+          />
+          <h2
+            style={{
+              marginTop: 20,
+              fontSize: 24,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              color: "#c8a415",
+            }}
+          >
             SCUM · Wycena skupu
           </h2>
-          <p className="text-[11px] uppercase tech text-muted-foreground">
+          <p style={{ fontSize: 11, color: "#8b968f", letterSpacing: 1 }}>
             {stamp}
           </p>
-          <table className="mt-5 w-full border-collapse text-sm">
+          <table
+            style={{
+              marginTop: 20,
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 14,
+            }}
+          >
             <thead>
-              <tr className="border-b border-border text-[10px] uppercase tech text-muted-foreground">
-                <th className="py-2 text-left">Przedmiot</th>
-                <th className="py-2 text-right">Cena</th>
-                <th className="py-2 text-right">Ilość</th>
-                <th className="py-2 text-right">Suma</th>
+              <tr style={{ color: "#8b968f", fontSize: 10 }}>
+                <th
+                  style={{
+                    padding: "6px 0",
+                    textAlign: "left",
+                    borderBottom: "1px solid #2a3330",
+                  }}
+                >
+                  PRZEDMIOT
+                </th>
+                <th
+                  style={{
+                    padding: "6px 0",
+                    textAlign: "right",
+                    borderBottom: "1px solid #2a3330",
+                  }}
+                >
+                  CENA
+                </th>
+                <th
+                  style={{
+                    padding: "6px 0",
+                    textAlign: "right",
+                    borderBottom: "1px solid #2a3330",
+                  }}
+                >
+                  ILOŚĆ
+                </th>
+                <th
+                  style={{
+                    padding: "6px 0",
+                    textAlign: "right",
+                    borderBottom: "1px solid #2a3330",
+                  }}
+                >
+                  SUMA
+                </th>
               </tr>
             </thead>
             <tbody>
               {selected.map((i) => (
-                <tr key={i.name} className="border-b border-border">
-                  <td className="py-1.5 pr-3 text-foreground">{i.name}</td>
-                  <td className="py-1.5 text-right tech text-muted-foreground">
+                <tr key={i.name}>
+                  <td
+                    style={{
+                      padding: "6px 12px 6px 0",
+                      borderBottom: "1px solid #2a3330",
+                      color: "#e6ebe8",
+                    }}
+                  >
+                    {i.name}
+                  </td>
+                  <td
+                    style={{
+                      padding: "6px 0",
+                      textAlign: "right",
+                      borderBottom: "1px solid #2a3330",
+                      color: "#8b968f",
+                    }}
+                  >
                     {nf.format(i.price)}
                   </td>
-                  <td className="py-1.5 text-right tech text-foreground">
+                  <td
+                    style={{
+                      padding: "6px 0",
+                      textAlign: "right",
+                      borderBottom: "1px solid #2a3330",
+                      color: "#e6ebe8",
+                    }}
+                  >
                     {nf.format(i.qty)}
                   </td>
-                  <td className="py-1.5 text-right tech text-primary">
+                  <td
+                    style={{
+                      padding: "6px 0",
+                      textAlign: "right",
+                      borderBottom: "1px solid #2a3330",
+                      color: "#c8a415",
+                    }}
+                  >
                     {nf.format(i.sum)}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="mt-4 flex items-end justify-between border-t border-primary/40 pt-3">
-            <span className="text-xs uppercase tech text-muted-foreground">
+          <div
+            style={{
+              marginTop: 16,
+              paddingTop: 12,
+              borderTop: "1px solid #6b5a10",
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ fontSize: 12, color: "#8b968f" }}>
               Sztuk: {nf.format(totalPieces)}
             </span>
-            <span className="text-2xl font-bold tech text-primary">
+            <span style={{ fontSize: 24, fontWeight: 700, color: "#c8a415" }}>
               {nf.format(totalCost)}
             </span>
           </div>
