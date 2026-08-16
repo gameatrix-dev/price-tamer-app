@@ -91,15 +91,27 @@ export default function SkupApp() {
     <div className="min-h-screen bg-background">
       <div className="h-3 w-full hazard-bar" />
 
-      <header className="relative overflow-hidden border-b border-border">
+      <header className="relative overflow-hidden border-b border-border bg-background">
         <img
           src={heroImg}
           alt="Mglisty posterunek w lesie — punkt skupu SCUM"
           width={1920}
           height={700}
-          className="absolute inset-0 h-full w-full object-cover opacity-40"
+          className="absolute inset-0 h-full w-full object-cover opacity-25"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+        {/* Przyciemnienie nie zależne od wsparcia gradientów oklab */}
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: "rgba(10, 14, 15, 0.65)" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(to top, rgba(10,14,15,1) 0%, rgba(10,14,15,0.75) 55%, rgba(10,14,15,0.35) 100%)",
+          }}
+        />
+
         <div className="relative mx-auto flex max-w-6xl items-end gap-4 px-4 pb-8 pt-28">
           <Crosshair className="mb-2 size-9 shrink-0 text-primary" />
           <div>
