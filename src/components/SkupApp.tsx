@@ -67,15 +67,20 @@ export default function SkupApp() {
     if (!captureRef.current) return;
     setSaving(true);
     try {
-      const html2canvas = (await import("html2canvas")).default;
-      const canvas = await html2canvas(captureRef.current, {
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(captureRef.current, {
+        pixelRatio: 2,
         backgroundColor: "#12181a",
-        scale: 2,
+        cacheBust: true,
       });
       const link = document.createElement("a");
       link.download = `wycena-scum-${new Date().toISOString().slice(0, 10)}.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Nie udało się zapisać obrazu", err);
     } finally {
       setSaving(false);
     }
