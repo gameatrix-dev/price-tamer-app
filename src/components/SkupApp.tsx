@@ -72,6 +72,7 @@ export default function SkupApp() {
         pixelRatio: 2,
         backgroundColor: "#12181a",
         cacheBust: true,
+        skipFonts: true,
       });
       const link = document.createElement("a");
       link.download = `wycena-scum-${new Date().toISOString().slice(0, 10)}.png`;
