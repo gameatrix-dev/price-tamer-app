@@ -176,7 +176,29 @@ export default function SkupApp() {
 
       <main className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[1fr_340px]">
         <section>
-          <div className="rounded border border-border bg-card p-3">
+          <div className="rounded border border-border bg-card p-4">
+            <h2 className="text-sm font-semibold uppercase tech text-primary">
+              Ostatnie zmiany w cenniku
+            </h2>
+            <ul className="mt-3 space-y-3">
+              {CHANGELOG.map((entry) => (
+                <li key={entry.version}>
+                  <p className="text-[10px] uppercase tech text-muted-foreground">
+                    {entry.date} · v{entry.version}
+                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {entry.changes.map((c) => (
+                      <li key={c} className="text-xs text-foreground">
+                        • {c}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-4 rounded border border-border bg-card p-3">
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -351,27 +373,6 @@ export default function SkupApp() {
             />
           </div>
 
-          <div className="mt-4 rounded border border-border bg-card p-4">
-            <h2 className="text-sm font-semibold uppercase tech text-primary">
-              Ostatnie zmiany w cenniku
-            </h2>
-            <ul className="mt-3 space-y-3">
-              {CHANGELOG.map((entry) => (
-                <li key={entry.version}>
-                  <p className="text-[10px] uppercase tech text-muted-foreground">
-                    {entry.date} · v{entry.version}
-                  </p>
-                  <ul className="mt-1 space-y-0.5">
-                    {entry.changes.map((c) => (
-                      <li key={c} className="text-xs text-foreground">
-                        • {c}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
         </aside>
       </main>
 

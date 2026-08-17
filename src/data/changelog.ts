@@ -8,6 +8,18 @@ export interface ChangeEntry {
 export const CHANGELOG: ChangeEntry[] = [
   {
     date: "2026-08-17",
+    version: "1.2.1",
+    changes: [
+      "Zmiana ceny: Duże kanistry — 3000",
+      "Zmiana ceny: Małe kanistry — 1500",
+      "Dodano: Opaska uciskowa — 700 (Medyczne)",
+      "Dodano: Opatrunek indywidualny — 200 (Medyczne)",
+      "Dodano: Pakiet opatrunków — 1000 (Medyczne)",
+      "Dodano: Alkohol izopropylowy — 500 (Medyczne)",
+    ],
+  },
+  {
+    date: "2026-08-17",
     version: "1.2.0",
     changes: [
       "Zmiana ceny: Pamiętniki / papier (stack 20x) — 1000",
