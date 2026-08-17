@@ -338,7 +338,7 @@ export default function SkupApp() {
               </h2>
             </div>
             <img
-              src={mapAsset.url}
+              src={`https://price-tamer-app.lovable.app${mapAsset.url}`}
               alt="Mapa SCUM z zaznaczoną lokalizacją skupu u Machety w sektorze B3"
               loading="lazy"
               className="w-full object-cover"
