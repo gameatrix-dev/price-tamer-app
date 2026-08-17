@@ -7,6 +7,21 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-17",
+    version: "1.2.0",
+    changes: [
+      "Zmiana ceny: Pamiętniki / papier (stack 20x) — 1000",
+      "Zmiana ceny: Papier / pamiętnik (1 szt.) — 50",
+      "Zmiana ceny: Kamień szlifierski — 1200",
+      "Zmiana ceny: Maseczka jednorazowa — 100",
+      "Dodano: Ruszt do grilla — 1200 (Obóz)",
+      "Dodano: Koszula szpitalna — 200 (Loot)",
+      "Dodano: Spodnie szpitalne — 200 (Loot)",
+      "Dodano mapę lokalizacji skupu",
+      "Dodano eksport wyceny do PDF",
+    ],
+  },
+  {
     date: "2026-08-16",
     version: "1.1.2",
     changes: [
