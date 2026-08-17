@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowDownAZ, Crosshair, ImageDown, Search, Trash2 } from "lucide-react";
+import {
+  ArrowDownAZ,
+  Crosshair,
+  FileDown,
+  ImageDown,
+  MapPin,
+  Search,
+  Trash2,
+} from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
 import { CHANGELOG } from "@/data/changelog";
@@ -11,6 +19,7 @@ import catMedyczne from "@/assets/cat-medyczne.jpg";
 import catNarzedzia from "@/assets/cat-narzedzia.jpg";
 import catOboz from "@/assets/cat-oboz.jpg";
 import catPojazdy from "@/assets/cat-pojazdy.jpg";
+import mapAsset from "@/assets/skup-mapa.png.asset.json";
 
 const CATEGORY_IMAGES: Record<Category, string> = {
   Chemia: catChemia,
@@ -30,6 +39,7 @@ export default function SkupApp() {
   const [asc, setAsc] = useState(true);
   const [qty, setQty] = useState<Record<string, number>>({});
   const [saving, setSaving] = useState(false);
+  const [savingPdf, setSavingPdf] = useState(false);
   const [stamp, setStamp] = useState("");
   const captureRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +94,39 @@ export default function SkupApp() {
       console.error("Nie udało się zapisać obrazu", err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const savePdf = async () => {
+    if (!captureRef.current) return;
+    setSavingPdf(true);
+    try {
+      const [{ toPng }, { jsPDF }] = await Promise.all([
+        import("html-to-image"),
+        import("jspdf"),
+      ]);
+      const node = captureRef.current;
+      const dataUrl = await toPng(node, {
+        pixelRatio: 2,
+        backgroundColor: "#12181a",
+        cacheBust: true,
+        skipFonts: true,
+      });
+      const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const ratio = node.offsetHeight / node.offsetWidth;
+      const margin = 24;
+      const imgW = pageW - margin * 2;
+      const imgH = Math.min(imgW * ratio, pageH - margin * 2);
+      pdf.setFillColor(18, 24, 26);
+      pdf.rect(0, 0, pageW, pageH, "F");
+      pdf.addImage(dataUrl, "PNG", margin, margin, imgW, imgH);
+      pdf.save(`wycena-scum-${new Date().toISOString().slice(0, 10)}.pdf`);
+    } catch (err) {
+      console.error("Nie udało się zapisać PDF", err);
+    } finally {
+      setSavingPdf(false);
     }
   };
 
@@ -267,6 +310,14 @@ export default function SkupApp() {
                 {saving ? "Generuję..." : "Wycena jako obraz"}
               </button>
               <button
+                onClick={savePdf}
+                disabled={selected.length === 0 || savingPdf}
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded border border-primary/60 bg-primary/15 px-4 py-2.5 text-xs uppercase tech text-primary transition-colors hover:bg-primary hover:text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <FileDown className="size-4" />
+                {savingPdf ? "Generuję..." : "Wycena jako PDF"}
+              </button>
+              <button
                 onClick={() => setQty({})}
                 className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded border border-border bg-secondary px-4 py-2.5 text-xs uppercase tech text-muted-foreground transition-colors hover:text-destructive"
               >
@@ -278,6 +329,21 @@ export default function SkupApp() {
           <p className="mt-3 px-1 text-[11px] text-muted-foreground">
             Ceny orientacyjne — dostosuj je w bazie do stawek swojego skupu.
           </p>
+
+          <div className="mt-4 overflow-hidden rounded border border-border bg-card">
+            <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+              <MapPin className="size-4 text-primary" />
+              <h2 className="text-sm font-semibold uppercase tech text-primary">
+                Lokalizacja skupu — sektor B3
+              </h2>
+            </div>
+            <img
+              src={mapAsset.url}
+              alt="Mapa SCUM z zaznaczoną lokalizacją skupu u Machety w sektorze B3"
+              loading="lazy"
+              className="w-full object-cover"
+            />
+          </div>
 
           <div className="mt-4 rounded border border-border bg-card p-4">
             <h2 className="text-sm font-semibold uppercase tech text-primary">
