@@ -33,6 +33,12 @@ const CATEGORY_IMAGES: Record<Category, string> = {
 
 const nf = new Intl.NumberFormat("pl-PL");
 
+// W aplikacji desktopowej (file://) potrzebny jest pełny adres CDN.
+const mapSrc =
+  typeof window !== "undefined" && window.location.protocol === "file:"
+    ? `https://price-tamer-app.lovable.app${mapAsset.url}`
+    : mapAsset.url;
+
 export default function SkupApp() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "Wszystkie">("Wszystkie");
@@ -338,7 +344,7 @@ export default function SkupApp() {
               </h2>
             </div>
             <img
-              src={`https://price-tamer-app.lovable.app${mapAsset.url}`}
+              src={mapSrc}
               alt="Mapa SCUM z zaznaczoną lokalizacją skupu u Machety w sektorze B3"
               loading="lazy"
               className="w-full object-cover"
