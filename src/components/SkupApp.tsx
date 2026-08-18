@@ -174,8 +174,8 @@ export default function SkupApp() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[1fr_340px]">
-        <section>
+      <main className="mx-auto grid max-w-[1500px] gap-6 px-4 py-8 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_340px]">
+        <aside className="order-2 lg:order-none lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
           <div className="rounded border border-border bg-card p-4">
             <h2 className="text-sm font-semibold uppercase tech text-primary">
               Ostatnie zmiany w cenniku
@@ -197,8 +197,11 @@ export default function SkupApp() {
               ))}
             </ul>
           </div>
+        </aside>
 
-          <div className="mt-4 rounded border border-border bg-card p-3">
+        <section className="order-1 lg:order-none">
+          <div className="rounded border border-border bg-card p-3">
+
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
