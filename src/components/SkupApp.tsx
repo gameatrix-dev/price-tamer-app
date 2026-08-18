@@ -304,7 +304,7 @@ export default function SkupApp() {
           </div>
         </section>
 
-        <aside className="lg:sticky lg:top-6 lg:self-start">
+        <aside className="order-3 lg:order-none lg:col-span-2 xl:col-span-1 xl:sticky xl:top-6 xl:self-start">
           <div className="rounded border border-border bg-card">
             <div className="h-2 hazard-bar" />
             <div className="p-5">
