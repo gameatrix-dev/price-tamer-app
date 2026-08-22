@@ -7,6 +7,19 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-22",
+    version: "1.2.3",
+    changes: [
+      "Dodano: Dildo — 1000 (Loot)",
+      "Dodano: Głowa dzika 85%+ — 1500 (Loot)",
+      "Dodano: Głowa jelenia / łani 85%+ — 1000 (Loot)",
+      "Dodano: Głowa niedźwiedzia 85%+ — 2000 (Loot)",
+      "Dodano: Banjo / gitara — 1500 (Loot)",
+      "Usunięto: Głowy zwierząt 90%+",
+      "Naprawiono białe tło po bokach strony",
+    ],
+  },
+  {
     date: "2026-08-18",
     version: "1.2.2",
     changes: [

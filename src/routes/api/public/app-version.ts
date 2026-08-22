@@ -5,11 +5,11 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.2.2",
+  version: "1.2.3",
   notes:
-    "Nowe produkty (żel na oparzenia, kilof, lodówka, zapałki, metalowa rura, gumka recepturka, nasionka, łzy feniksa, ryby, agregaty), oczy kukieł 700, changelog w osobnej kolumnie po lewej.",
+    "Nowe produkty (dildo, głowy dzika/jelenia/łani/niedźwiedzia 85%+, banjo/gitara), usunięto „Głowy zwierząt 90%+”, naprawiono białe tło po bokach. Zawiera też całą zawartość v1.2.2.",
   downloadUrl:
-    "https://price-tamer-app.lovable.app/__l5e/assets-v1/767c752a-af8b-44d9-8f01-d074ccffc54d/SkupMachety-windows-x64.zip",
+    "https://price-tamer-app.lovable.app/__l5e/assets-v1/31bb9829-cb24-4b2a-be7b-18ab0327daf2/SkupMachety-windows-x64.zip",
 };
 
 export const Route = createFileRoute("/api/public/app-version")({
