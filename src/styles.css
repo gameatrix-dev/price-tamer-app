@@ -150,7 +150,17 @@
     border-color: var(--color-border);
   }
 
+  /* Sztywny hex jako fallback — na niektórych przeglądarkach/buildach
+     oklch-var potrafi nie załapać i zostaje białe tło. */
+  html {
+    min-height: 100%;
+    background-color: #12181a;
+    color-scheme: dark;
+  }
+
   body {
+    min-height: 100%;
+    background-color: #12181a;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
