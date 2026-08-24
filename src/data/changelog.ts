@@ -7,6 +7,30 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-24",
+    version: "1.2.4",
+    changes: [
+      "Dodano: Głowa wilka 85%+ — 1500 (Loot)",
+      "Dodano: Głowa kozy 85%+ — 1500 (Loot)",
+      "Dodano: Głowa konia 85%+ — 1500 (Loot)",
+      "Dodano: Oskubany kurczak — 1500 (Loot)",
+      "Dodano: Głowy zmutowanych zwierząt — 2000 (Loot)",
+      "Dodano: Mięso zmutowanych zwierząt 85%+ — 2000 (Loot)",
+      "Dodano: Skóry zmutowanych zwierząt 90%+ — 200 (Loot)",
+      "Dodano: Flaki zmutowanych zwierząt — 100 (Loot)",
+      "Dodano: Klucz hydrauliczny — 200 (Narzędzia)",
+      "Dodano: Antybiotyki (blister) — 500 (Medyczne)",
+      "Dodano: Środki przeciwbólowe (blister) — 500 (Medyczne)",
+      "Dodano: Jodek potasu (blister) — 300 (Medyczne)",
+      "Dodano: Alternator Szajbusa — 3000 (Pojazdy)",
+      "Dodano: Alternator WW — 2500 (Pojazdy)",
+      "Dodano: Alternator Łajki — 2500 (Pojazdy)",
+      "Dodano: Zielone tajemnicze nasionka (1 szt.) — 1000 (Loot)",
+      "Zmiana ceny: Opatrunek hemostatyczny — 500",
+      "Zmiana ceny: Zielone tajemnicze nasionka (x10) — 10000",
+    ],
+  },
+  {
     date: "2026-08-22",
     version: "1.2.3",
     changes: [
