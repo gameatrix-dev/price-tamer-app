@@ -5,9 +5,9 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.2.3",
+  version: "1.2.4",
   notes:
-    "Nowe produkty (dildo, głowy dzika/jelenia/łani/niedźwiedzia 85%+, banjo/gitara), usunięto „Głowy zwierząt 90%+”, naprawiono białe tło po bokach. Zawiera też całą zawartość v1.2.2.",
+    "16 nowych produktów (głowy wilka/kozy/konia 85%+, oskubany kurczak, zmutowane zwierzęta, klucz hydrauliczny, blistry medyczne, alternatory Szajbusa/WW/Łajki, nasionka 1 szt.), zmiana cen: opatrunek hemostatyczny 500, nasionka x10 — 10000.",
   downloadUrl:
     "https://price-tamer-app.lovable.app/__l5e/assets-v1/31bb9829-cb24-4b2a-be7b-18ab0327daf2/SkupMachety-windows-x64.zip",
 };
