@@ -563,6 +563,15 @@ export default function SkupApp() {
           </div>
         </div>
       </div>
+      {settingsOpen && (
+        <LockSettings
+          locks={locks}
+          toggleLock={toggleLock}
+          setLock={setLock}
+          resetLocks={resetLocks}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </div>
   );
 }
