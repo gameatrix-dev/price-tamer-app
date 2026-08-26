@@ -256,7 +256,11 @@ export default function SkupApp() {
                 <div
                   key={item.name}
                   className={`grid grid-cols-[1fr_80px_110px_90px] items-center gap-2 border-b border-border px-4 py-2.5 transition-colors last:border-0 ${
-                    q > 0 ? "bg-accent/40" : "hover:bg-accent/20"
+                    item.locked
+                      ? "opacity-60"
+                      : q > 0
+                        ? "bg-accent/40"
+                        : "hover:bg-accent/20"
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -266,14 +270,22 @@ export default function SkupApp() {
                       loading="lazy"
                       width={512}
                       height={512}
-                      className="size-10 shrink-0 rounded border border-border object-cover"
+                      className={`size-10 shrink-0 rounded border border-border object-cover ${item.locked ? "grayscale" : ""}`}
                     />
                     <div className="min-w-0">
-                      <p className="truncate text-sm text-foreground">
+                      <p
+                        className={`truncate text-sm ${item.locked ? "text-muted-foreground line-through" : "text-foreground"}`}
+                      >
                         {item.name}
                       </p>
                       <p className="text-[10px] uppercase tech text-muted-foreground">
-                        {item.category}
+                        {item.locked ? (
+                          <span className="text-destructive">
+                            Skup wstrzymany
+                          </span>
+                        ) : (
+                          item.category
+                        )}
                       </p>
                     </div>
                   </div>
