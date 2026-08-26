@@ -15,9 +15,22 @@ const RELEASE = {
 export const Route = createFileRoute("/api/public/app-version")({
   server: {
     handlers: {
-      GET: async () =>
-        new Response(
-          JSON.stringify({ ...RELEASE, items: ITEMS }),
+      GET: async ({ request }) => {
+        // Wspólne blokady produktów — aplikacja desktopowa pobiera je razem z cennikiem.
+        let locks: Record<string, boolean> = {};
+        try {
+          const res = await fetch(
+            new URL("/api/public/item-locks", request.url),
+          );
+          if (res.ok)
+            locks = ((await res.json()) as { locks?: Record<string, boolean> })
+              .locks ?? {};
+        } catch {
+          /* brak blokad — aplikacja użyje własnego cache'u */
+        }
+
+        return new Response(
+          JSON.stringify({ ...RELEASE, items: ITEMS, locks }),
           {
             headers: {
               "content-type": "application/json",
@@ -25,7 +38,8 @@ export const Route = createFileRoute("/api/public/app-version")({
               "cache-control": "no-store",
             },
           },
-        ),
+        );
+      },
     },
   },
 });
