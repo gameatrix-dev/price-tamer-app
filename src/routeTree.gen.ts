@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicAppVersionRouteImport } from './routes/api/public/app-version'
+import { Route as ApiPublicItemLocksRouteImport } from './routes/api/public/item-locks'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const ApiPublicAppVersionRoute = ApiPublicAppVersionRouteImport.update({
   path: '/api/public/app-version',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicItemLocksRoute = ApiPublicItemLocksRouteImport.update({
+  id: '/api/public/item-locks',
+  path: '/api/public/item-locks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/app-version'
+  fullPaths: '/' | '/api/public/app-version' | '/api/public/item-locks'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/app-version'
-  id: '__root__' | '/' | '/api/public/app-version'
+  to: '/' | '/api/public/app-version' | '/api/public/item-locks'
+  id: '__root__' | '/' | '/api/public/app-version' | '/api/public/item-locks'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiPublicAppVersionRoute: typeof ApiPublicAppVersionRoute
+  ApiPublicItemLocksRoute: typeof ApiPublicItemLocksRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAppVersionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/item-locks': {
+      id: '/api/public/item-locks'
+      path: '/api/public/item-locks'
+      fullPath: '/api/public/item-locks'
+      preLoaderRoute: typeof ApiPublicItemLocksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiPublicAppVersionRoute: ApiPublicAppVersionRoute,
+  ApiPublicItemLocksRoute: ApiPublicItemLocksRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
