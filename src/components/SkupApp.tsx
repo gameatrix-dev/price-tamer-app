@@ -6,11 +6,14 @@ import {
   ImageDown,
   MapPin,
   Search,
+  Settings,
   Trash2,
 } from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
 import { CHANGELOG } from "@/data/changelog";
+import LockSettings from "@/components/LockSettings";
+import { useItemLocks } from "@/hooks/useItemLocks";
 import heroImg from "@/assets/scum-hero.jpg";
 import catChemia from "@/assets/cat-chemia.jpg";
 import catElektronika from "@/assets/cat-elektronika.jpg";
@@ -47,6 +50,8 @@ export default function SkupApp() {
   const [saving, setSaving] = useState(false);
   const [savingPdf, setSavingPdf] = useState(false);
   const [stamp, setStamp] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { locks, isLocked, toggleLock, setLock, resetLocks } = useItemLocks();
   const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -67,7 +72,7 @@ export default function SkupApp() {
   }, [query, category, asc]);
 
   const selected = ITEMS.filter(
-    (i) => !i.locked && (qty[i.name] ?? 0) > 0,
+    (i) => !isLocked(i.name) && (qty[i.name] ?? 0) > 0,
   ).map((i) => {
     const n = qty[i.name] ?? 0;
     return { ...i, qty: n, sum: n * i.price };
@@ -77,7 +82,7 @@ export default function SkupApp() {
   const totalCost = selected.reduce((s, i) => s + i.sum, 0);
 
   const setItemQty = (name: string, value: string) => {
-    if (ITEMS.find((i) => i.name === name)?.locked) return;
+    if (isLocked(name)) return;
     const n = Math.max(0, Math.min(99999, Math.floor(Number(value) || 0)));
     setQty((prev) => ({ ...prev, [name]: n }));
   };
@@ -174,6 +179,13 @@ export default function SkupApp() {
               Cennik operacyjny // {ITEMS.length} pozycji w bazie
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => setSettingsOpen(true)}
+            className="ml-auto mb-2 flex items-center gap-2 rounded border border-border bg-card/80 px-3 py-2 text-xs uppercase tech text-foreground hover:bg-accent/40"
+          >
+            <Settings className="size-4" /> Ustawienia
+          </button>
         </div>
       </header>
 
@@ -252,11 +264,12 @@ export default function SkupApp() {
 
             {rows.map((item) => {
               const q = qty[item.name] ?? 0;
+              const locked = isLocked(item.name);
               return (
                 <div
                   key={item.name}
                   className={`grid grid-cols-[1fr_80px_110px_90px] items-center gap-2 border-b border-border px-4 py-2.5 transition-colors last:border-0 ${
-                    item.locked
+                    locked
                       ? "opacity-60"
                       : q > 0
                         ? "bg-accent/40"
@@ -270,16 +283,16 @@ export default function SkupApp() {
                       loading="lazy"
                       width={512}
                       height={512}
-                      className={`size-10 shrink-0 rounded border border-border object-cover ${item.locked ? "grayscale" : ""}`}
+                      className={`size-10 shrink-0 rounded border border-border object-cover ${locked ? "grayscale" : ""}`}
                     />
                     <div className="min-w-0">
                       <p
-                        className={`truncate text-sm ${item.locked ? "text-muted-foreground line-through" : "text-foreground"}`}
+                        className={`truncate text-sm ${locked ? "text-muted-foreground line-through" : "text-foreground"}`}
                       >
                         {item.name}
                       </p>
                       <p className="text-[10px] uppercase tech text-muted-foreground">
-                        {item.locked ? (
+                        {locked ? (
                           <span className="text-destructive">
                             Skup wstrzymany
                           </span>
@@ -296,17 +309,17 @@ export default function SkupApp() {
                     type="number"
                     min={0}
                     inputMode="numeric"
-                    disabled={item.locked}
+                    disabled={locked}
                     aria-label={`Ilość — ${item.name}`}
-                    value={item.locked ? "" : q === 0 ? "" : q}
-                    placeholder={item.locked ? "—" : "0"}
+                    value={locked ? "" : q === 0 ? "" : q}
+                    placeholder={locked ? "—" : "0"}
                     onChange={(e) => setItemQty(item.name, e.target.value)}
                     className="w-full rounded border border-border bg-background px-2 py-1.5 text-center text-sm tech outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-40"
                   />
                   <span
                     className={`text-right text-sm tech ${q > 0 ? "text-foreground" : "text-muted-foreground"}`}
                   >
-                    {item.locked ? "—" : nf.format(q * item.price)}
+                    {locked ? "—" : nf.format(q * item.price)}
                   </span>
                 </div>
               );
@@ -550,6 +563,15 @@ export default function SkupApp() {
           </div>
         </div>
       </div>
+      {settingsOpen && (
+        <LockSettings
+          locks={locks}
+          toggleLock={toggleLock}
+          setLock={setLock}
+          resetLocks={resetLocks}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </div>
   );
 }
