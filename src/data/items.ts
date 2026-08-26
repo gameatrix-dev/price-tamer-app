@@ -11,6 +11,8 @@ export interface Item {
   name: string;
   category: Category;
   price: number;
+  /** Gdy true — nie można wpisać ilości (brak zapotrzebowania). */
+  locked?: boolean;
 }
 
 export const CATEGORIES: Category[] = [
@@ -55,7 +57,7 @@ export const ITEMS: Item[] = [
   { name: "Nożyczki", category: "Narzędzia", price: 100 },
   { name: "Oczy kukieł", category: "Loot", price: 700 },
   { name: "Olej hamulcowy", category: "Pojazdy", price: 300 },
-  { name: "Opaska uciskowa", category: "Medyczne", price: 700 },
+  { name: "Opaska uciskowa", category: "Medyczne", price: 500 },
   { name: "Opatrunek hemostatyczny", category: "Medyczne", price: 500 },
   { name: "Opatrunek indywidualny", category: "Medyczne", price: 200 },
   { name: "Pakiet opatrunków", category: "Medyczne", price: 1000 },
@@ -67,11 +69,13 @@ export const ITEMS: Item[] = [
     name: "Poćwiartowane w kawałki mięso — wilk / jeleń / dzik (całość)",
     category: "Loot",
     price: 2000,
+    locked: true,
   },
   {
     name: "Poćwiartowane w kawałki mięso z niedźwiedzia (całość)",
     category: "Loot",
     price: 3500,
+    locked: true,
   },
   { name: "Przecinarki", category: "Narzędzia", price: 1000 },
   { name: "Ruszt do grilla", category: "Obóz", price: 1200 },
@@ -118,4 +122,11 @@ export const ITEMS: Item[] = [
   { name: "Alternator Szajbusa", category: "Pojazdy", price: 3000 },
   { name: "Alternator WW", category: "Pojazdy", price: 2500 },
   { name: "Alternator Łajki", category: "Pojazdy", price: 2500 },
+  { name: "Głowa osła 85%+", category: "Loot", price: 1000 },
+  { name: "Krew Brennera", category: "Loot", price: 1500 },
+  { name: "Witaminy (pudełko)", category: "Medyczne", price: 800 },
+  { name: "Witaminy (blister)", category: "Medyczne", price: 300 },
+  { name: "Kości (20 szt.)", category: "Loot", price: 1000 },
+  { name: "Węgiel aktywny (blister)", category: "Medyczne", price: 300 },
+  { name: "Liść aloesu", category: "Loot", price: 100 },
 ];

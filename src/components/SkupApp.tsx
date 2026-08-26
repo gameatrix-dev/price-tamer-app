@@ -66,7 +66,9 @@ export default function SkupApp() {
     );
   }, [query, category, asc]);
 
-  const selected = ITEMS.filter((i) => (qty[i.name] ?? 0) > 0).map((i) => {
+  const selected = ITEMS.filter(
+    (i) => !i.locked && (qty[i.name] ?? 0) > 0,
+  ).map((i) => {
     const n = qty[i.name] ?? 0;
     return { ...i, qty: n, sum: n * i.price };
   });
@@ -75,6 +77,7 @@ export default function SkupApp() {
   const totalCost = selected.reduce((s, i) => s + i.sum, 0);
 
   const setItemQty = (name: string, value: string) => {
+    if (ITEMS.find((i) => i.name === name)?.locked) return;
     const n = Math.max(0, Math.min(99999, Math.floor(Number(value) || 0)));
     setQty((prev) => ({ ...prev, [name]: n }));
   };
@@ -253,7 +256,11 @@ export default function SkupApp() {
                 <div
                   key={item.name}
                   className={`grid grid-cols-[1fr_80px_110px_90px] items-center gap-2 border-b border-border px-4 py-2.5 transition-colors last:border-0 ${
-                    q > 0 ? "bg-accent/40" : "hover:bg-accent/20"
+                    item.locked
+                      ? "opacity-60"
+                      : q > 0
+                        ? "bg-accent/40"
+                        : "hover:bg-accent/20"
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -263,14 +270,22 @@ export default function SkupApp() {
                       loading="lazy"
                       width={512}
                       height={512}
-                      className="size-10 shrink-0 rounded border border-border object-cover"
+                      className={`size-10 shrink-0 rounded border border-border object-cover ${item.locked ? "grayscale" : ""}`}
                     />
                     <div className="min-w-0">
-                      <p className="truncate text-sm text-foreground">
+                      <p
+                        className={`truncate text-sm ${item.locked ? "text-muted-foreground line-through" : "text-foreground"}`}
+                      >
                         {item.name}
                       </p>
                       <p className="text-[10px] uppercase tech text-muted-foreground">
-                        {item.category}
+                        {item.locked ? (
+                          <span className="text-destructive">
+                            Skup wstrzymany
+                          </span>
+                        ) : (
+                          item.category
+                        )}
                       </p>
                     </div>
                   </div>
@@ -281,16 +296,17 @@ export default function SkupApp() {
                     type="number"
                     min={0}
                     inputMode="numeric"
+                    disabled={item.locked}
                     aria-label={`Ilość — ${item.name}`}
-                    value={q === 0 ? "" : q}
-                    placeholder="0"
+                    value={item.locked ? "" : q === 0 ? "" : q}
+                    placeholder={item.locked ? "—" : "0"}
                     onChange={(e) => setItemQty(item.name, e.target.value)}
-                    className="w-full rounded border border-border bg-background px-2 py-1.5 text-center text-sm tech outline-none focus:border-primary"
+                    className="w-full rounded border border-border bg-background px-2 py-1.5 text-center text-sm tech outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-40"
                   />
                   <span
                     className={`text-right text-sm tech ${q > 0 ? "text-foreground" : "text-muted-foreground"}`}
                   >
-                    {nf.format(q * item.price)}
+                    {item.locked ? "—" : nf.format(q * item.price)}
                   </span>
                 </div>
               );
