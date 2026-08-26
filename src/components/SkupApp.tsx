@@ -66,7 +66,9 @@ export default function SkupApp() {
     );
   }, [query, category, asc]);
 
-  const selected = ITEMS.filter((i) => (qty[i.name] ?? 0) > 0).map((i) => {
+  const selected = ITEMS.filter(
+    (i) => !i.locked && (qty[i.name] ?? 0) > 0,
+  ).map((i) => {
     const n = qty[i.name] ?? 0;
     return { ...i, qty: n, sum: n * i.price };
   });
@@ -75,6 +77,7 @@ export default function SkupApp() {
   const totalCost = selected.reduce((s, i) => s + i.sum, 0);
 
   const setItemQty = (name: string, value: string) => {
+    if (ITEMS.find((i) => i.name === name)?.locked) return;
     const n = Math.max(0, Math.min(99999, Math.floor(Number(value) || 0)));
     setQty((prev) => ({ ...prev, [name]: n }));
   };
