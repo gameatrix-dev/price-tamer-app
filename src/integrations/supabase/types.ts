@@ -14,7 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      item_locks: {
+        Row: {
+          item_name: string
+          locked: boolean
+          updated_at: string
+        }
+        Insert: {
+          item_name: string
+          locked?: boolean
+          updated_at?: string
+        }
+        Update: {
+          item_name?: string
+          locked?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
