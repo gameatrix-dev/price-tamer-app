@@ -281,16 +281,17 @@ export default function SkupApp() {
                     type="number"
                     min={0}
                     inputMode="numeric"
+                    disabled={item.locked}
                     aria-label={`Ilość — ${item.name}`}
-                    value={q === 0 ? "" : q}
-                    placeholder="0"
+                    value={item.locked ? "" : q === 0 ? "" : q}
+                    placeholder={item.locked ? "—" : "0"}
                     onChange={(e) => setItemQty(item.name, e.target.value)}
-                    className="w-full rounded border border-border bg-background px-2 py-1.5 text-center text-sm tech outline-none focus:border-primary"
+                    className="w-full rounded border border-border bg-background px-2 py-1.5 text-center text-sm tech outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-40"
                   />
                   <span
                     className={`text-right text-sm tech ${q > 0 ? "text-foreground" : "text-muted-foreground"}`}
                   >
-                    {nf.format(q * item.price)}
+                    {item.locked ? "—" : nf.format(q * item.price)}
                   </span>
                 </div>
               );
