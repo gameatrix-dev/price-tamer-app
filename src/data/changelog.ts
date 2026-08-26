@@ -8,6 +8,15 @@ export interface ChangeEntry {
 export const CHANGELOG: ChangeEntry[] = [
   {
     date: "2026-08-26",
+    version: "1.2.6",
+    changes: [
+      "Nowość: ekran ustawień chroniony kodem PIN",
+      "Blokady produktów wspólne dla wszystkich (zapis na serwerze)",
+      "Aplikacja desktopowa pobiera blokady razem z cennikiem",
+    ],
+  },
+  {
+    date: "2026-08-26",
     version: "1.2.5",
     changes: [
       "Dodano: Głowa osła 85%+ — 1000 (Loot)",
