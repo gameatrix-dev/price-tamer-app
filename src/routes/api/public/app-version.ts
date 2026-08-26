@@ -5,11 +5,11 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.2.5",
+  version: "1.2.6",
   notes:
-    "Nowe pozycje: głowa osła, krew Brennera, witaminy (pudełko/blister), kości 20 szt., węgiel aktywny, liść aloesu. Opaska uciskowa 500. Wstrzymano skup poćwiartowanego mięsa (wilk/jeleń/dzik oraz niedźwiedź).",
+    "Ekran ustawień chroniony kodem PIN — blokady produktów można włączać i wyłączać z poziomu aplikacji. Blokady są wspólne dla wszystkich i pobierane z serwera razem z cennikiem.",
   downloadUrl:
-    "https://price-tamer-app.lovable.app/__l5e/assets-v1/486a3ca4-d09e-4bff-9f7b-7f19a7d65738/SkupMachety-windows-x64.zip",
+    "https://price-tamer-app.lovable.app/__l5e/assets-v1/78826856-65ca-46c6-971f-3f2039b7bb18/SkupMachety-windows-x64.zip",
 };
 
 export const Route = createFileRoute("/api/public/app-version")({
