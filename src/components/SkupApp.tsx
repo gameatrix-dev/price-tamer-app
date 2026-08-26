@@ -51,7 +51,7 @@ export default function SkupApp() {
   const [savingPdf, setSavingPdf] = useState(false);
   const [stamp, setStamp] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { locks, isLocked, toggleLock, setLock, resetLocks } = useItemLocks();
+  const { locks, isLocked, saveLocks, verifyPin } = useItemLocks();
   const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -566,9 +566,8 @@ export default function SkupApp() {
       {settingsOpen && (
         <LockSettings
           locks={locks}
-          toggleLock={toggleLock}
-          setLock={setLock}
-          resetLocks={resetLocks}
+          saveLocks={saveLocks}
+          verifyPin={verifyPin}
           onClose={() => setSettingsOpen(false)}
         />
       )}

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Lock, RotateCcw, Search, Unlock, X } from "lucide-react";
+import { KeyRound, Loader2, Lock, Search, Unlock, X } from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
 
@@ -7,19 +7,25 @@ const nf = new Intl.NumberFormat("pl-PL");
 
 interface Props {
   locks: Record<string, boolean>;
-  toggleLock: (name: string) => void;
-  setLock: (name: string, value: boolean) => void;
-  resetLocks: () => void;
+  saveLocks: (
+    pin: string,
+    updates: { name: string; locked: boolean }[],
+  ) => Promise<{ ok: boolean; error?: string }>;
+  verifyPin: (pin: string) => Promise<{ ok: boolean; error?: string }>;
   onClose: () => void;
 }
 
 export default function LockSettings({
   locks,
-  toggleLock,
-  setLock,
-  resetLocks,
+  saveLocks,
+  verifyPin,
   onClose,
 }: Props) {
+  const [pin, setPin] = useState("");
+  const [unlockedUi, setUnlockedUi] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "Wszystkie">("Wszystkie");
 
@@ -34,6 +40,24 @@ export default function LockSettings({
 
   const lockedCount = ITEMS.filter((i) => locks[i.name]).length;
 
+  const submitPin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChecking(true);
+    setError("");
+    const res = await verifyPin(pin);
+    setChecking(false);
+    if (res.ok) setUnlockedUi(true);
+    else setError(res.error ?? "Nieprawidłowy PIN.");
+  };
+
+  const apply = async (updates: { name: string; locked: boolean }[]) => {
+    setBusy(updates.length === 1 ? updates[0]!.name : "all");
+    setError("");
+    const res = await saveLocks(pin, updates);
+    setBusy(null);
+    if (!res.ok) setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-background/95 p-4 backdrop-blur-sm">
       <div className="my-6 w-full max-w-3xl rounded border border-border bg-card">
@@ -47,121 +71,157 @@ export default function LockSettings({
               Zablokowane pozycje: {lockedCount} / {ITEMS.length}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={resetLocks}
-              className="flex items-center gap-2 rounded border border-border px-3 py-2 text-xs uppercase tech text-muted-foreground hover:bg-accent/30"
-            >
-              <RotateCcw className="size-3.5" /> Reset
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Zamknij ustawienia"
-              className="flex items-center gap-2 rounded border border-border px-3 py-2 text-xs uppercase tech text-foreground hover:bg-accent/30"
-            >
-              <X className="size-3.5" /> Zamknij
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Zamknij ustawienia"
+            className="flex items-center gap-2 rounded border border-border px-3 py-2 text-xs uppercase tech text-foreground hover:bg-accent/30"
+          >
+            <X className="size-3.5" /> Zamknij
+          </button>
         </div>
 
-        <div className="space-y-3 border-b border-border px-5 py-4">
-          <p className="text-xs text-muted-foreground">
-            Wyłącz produkt, aby zablokować wpisywanie ilości w cenniku (np. gdy
-            spadło zapotrzebowanie). Ustawienia zapisują się lokalnie.
-          </p>
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        {!unlockedUi ? (
+          <form onSubmit={submitPin} className="space-y-4 px-5 py-8">
+            <div className="flex items-center gap-2 text-primary">
+              <KeyRound className="size-5" />
+              <h3 className="text-sm font-semibold uppercase tech">
+                Dostęp tylko dla administratora
+              </h3>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Podaj kod PIN, aby zarządzać blokadami produktów. Kod jest
+              sprawdzany na serwerze — nie ma go w aplikacji.
+            </p>
             <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Szukaj produktu…"
-              aria-label="Szukaj produktu w ustawieniach"
-              className="w-full rounded border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+              type="password"
+              autoFocus
+              autoComplete="current-password"
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+              placeholder="Kod PIN"
+              aria-label="Kod PIN administratora"
+              className="w-full rounded border border-border bg-background px-3 py-2 text-sm tech outline-none focus:border-primary"
             />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {(["Wszystkie", ...CATEGORIES] as const).map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCategory(c)}
-                className={`rounded border px-2.5 py-1 text-[10px] uppercase tech ${
-                  category === c
-                    ? "border-primary text-primary"
-                    : "border-border text-muted-foreground hover:bg-accent/30"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
+            {error && <p className="text-xs text-destructive">{error}</p>}
             <button
-              type="button"
-              onClick={() => rows.forEach((i) => setLock(i.name, true))}
-              className="rounded border border-border px-3 py-1.5 text-[10px] uppercase tech text-muted-foreground hover:bg-accent/30"
+              type="submit"
+              disabled={checking || pin.length === 0}
+              className="flex items-center gap-2 rounded border border-primary px-4 py-2 text-xs uppercase tech text-primary disabled:opacity-50"
             >
-              Zablokuj widoczne
+              {checking && <Loader2 className="size-3.5 animate-spin" />}
+              Odblokuj ustawienia
             </button>
-            <button
-              type="button"
-              onClick={() => rows.forEach((i) => setLock(i.name, false))}
-              className="rounded border border-border px-3 py-1.5 text-[10px] uppercase tech text-muted-foreground hover:bg-accent/30"
-            >
-              Odblokuj widoczne
-            </button>
-          </div>
-        </div>
-
-        <ul className="max-h-[55vh] overflow-y-auto">
-          {rows.map((item) => {
-            const locked = Boolean(locks[item.name]);
-            return (
-              <li
-                key={item.name}
-                className="flex items-center justify-between gap-3 border-b border-border px-5 py-2.5 last:border-0"
-              >
-                <div className="min-w-0">
-                  <p
-                    className={`truncate text-sm ${locked ? "text-muted-foreground line-through" : "text-foreground"}`}
+          </form>
+        ) : (
+          <>
+            <div className="space-y-3 border-b border-border px-5 py-4">
+              <p className="text-xs text-muted-foreground">
+                Wyłącz produkt, aby zablokować wpisywanie ilości w cenniku.
+                Zmiany są wspólne — zobaczą je wszyscy użytkownicy aplikacji.
+              </p>
+              {error && <p className="text-xs text-destructive">{error}</p>}
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Szukaj produktu…"
+                  aria-label="Szukaj produktu w ustawieniach"
+                  className="w-full rounded border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {(["Wszystkie", ...CATEGORIES] as const).map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCategory(c)}
+                    className={`rounded border px-2.5 py-1 text-[10px] uppercase tech ${
+                      category === c
+                        ? "border-primary text-primary"
+                        : "border-border text-muted-foreground hover:bg-accent/30"
+                    }`}
                   >
-                    {item.name}
-                  </p>
-                  <p className="text-[10px] uppercase tech text-muted-foreground">
-                    {item.category} · {nf.format(item.price)}
-                  </p>
-                </div>
+                    {c}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => toggleLock(item.name)}
-                  aria-pressed={locked}
-                  className={`flex shrink-0 items-center gap-2 rounded border px-3 py-1.5 text-[10px] uppercase tech ${
-                    locked
-                      ? "border-destructive text-destructive"
-                      : "border-primary text-primary"
-                  }`}
+                  disabled={busy !== null}
+                  onClick={() =>
+                    apply(rows.map((i) => ({ name: i.name, locked: true })))
+                  }
+                  className="rounded border border-border px-3 py-1.5 text-[10px] uppercase tech text-muted-foreground hover:bg-accent/30 disabled:opacity-50"
                 >
-                  {locked ? (
-                    <>
-                      <Lock className="size-3.5" /> Zablokowany
-                    </>
-                  ) : (
-                    <>
-                      <Unlock className="size-3.5" /> Aktywny
-                    </>
-                  )}
+                  Zablokuj widoczne
                 </button>
-              </li>
-            );
-          })}
-          {rows.length === 0 && (
-            <li className="px-5 py-8 text-center text-sm tech text-muted-foreground">
-              Brak wyników.
-            </li>
-          )}
-        </ul>
+                <button
+                  type="button"
+                  disabled={busy !== null}
+                  onClick={() =>
+                    apply(rows.map((i) => ({ name: i.name, locked: false })))
+                  }
+                  className="rounded border border-border px-3 py-1.5 text-[10px] uppercase tech text-muted-foreground hover:bg-accent/30 disabled:opacity-50"
+                >
+                  Odblokuj widoczne
+                </button>
+              </div>
+            </div>
+
+            <ul className="max-h-[55vh] overflow-y-auto">
+              {rows.map((item) => {
+                const locked = Boolean(locks[item.name]);
+                return (
+                  <li
+                    key={item.name}
+                    className="flex items-center justify-between gap-3 border-b border-border px-5 py-2.5 last:border-0"
+                  >
+                    <div className="min-w-0">
+                      <p
+                        className={`truncate text-sm ${locked ? "text-muted-foreground line-through" : "text-foreground"}`}
+                      >
+                        {item.name}
+                      </p>
+                      <p className="text-[10px] uppercase tech text-muted-foreground">
+                        {item.category} · {nf.format(item.price)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={busy !== null}
+                      onClick={() =>
+                        apply([{ name: item.name, locked: !locked }])
+                      }
+                      aria-pressed={locked}
+                      className={`flex shrink-0 items-center gap-2 rounded border px-3 py-1.5 text-[10px] uppercase tech disabled:opacity-50 ${
+                        locked
+                          ? "border-destructive text-destructive"
+                          : "border-primary text-primary"
+                      }`}
+                    >
+                      {busy === item.name ? (
+                        <Loader2 className="size-3.5 animate-spin" />
+                      ) : locked ? (
+                        <Lock className="size-3.5" />
+                      ) : (
+                        <Unlock className="size-3.5" />
+                      )}
+                      {locked ? "Zablokowany" : "Aktywny"}
+                    </button>
+                  </li>
+                );
+              })}
+              {rows.length === 0 && (
+                <li className="px-5 py-8 text-center text-sm tech text-muted-foreground">
+                  Brak wyników.
+                </li>
+              )}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );
