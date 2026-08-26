@@ -7,6 +7,22 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-26",
+    version: "1.2.5",
+    changes: [
+      "Dodano: Głowa osła 85%+ — 1000 (Loot)",
+      "Dodano: Krew Brennera — 1500 (Loot)",
+      "Dodano: Witaminy (pudełko) — 800 (Medyczne)",
+      "Dodano: Witaminy (blister) — 300 (Medyczne)",
+      "Dodano: Kości (20 szt.) — 1000 (Loot)",
+      "Dodano: Węgiel aktywny (blister) — 300 (Medyczne)",
+      "Dodano: Liść aloesu — 100 (Loot)",
+      "Zmiana ceny: Opaska uciskowa — 500",
+      "Wstrzymano skup: Poćwiartowane mięso — wilk / jeleń / dzik",
+      "Wstrzymano skup: Poćwiartowane mięso z niedźwiedzia",
+    ],
+  },
+  {
     date: "2026-08-24",
     version: "1.2.4",
     changes: [
