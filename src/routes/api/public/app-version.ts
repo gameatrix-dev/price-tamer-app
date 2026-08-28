@@ -5,11 +5,11 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.2.6",
+  version: "1.2.7",
   notes:
-    "Ekran ustawień chroniony kodem PIN — blokady produktów można włączać i wyłączać z poziomu aplikacji. Blokady są wspólne dla wszystkich i pobierane z serwera razem z cennikiem.",
+    "Nowe produkty: zestaw do szycia, nawóz organiczny, konopie (1 pąk), paczka herbaty, rękawice medyczne, dzika róża, długopis, garnek. Zmiany cen: liść aloesu 200, strzykawki 200.",
   downloadUrl:
-    "https://price-tamer-app.lovable.app/__l5e/assets-v1/78826856-65ca-46c6-971f-3f2039b7bb18/SkupMachety-windows-x64.zip",
+    "https://price-tamer-app.lovable.app/__l5e/assets-v1/73f33dba-2bec-4fcc-8935-ebe821fd06cb/SkupMachety-windows-x64.zip",
 };
 
 export const Route = createFileRoute("/api/public/app-version")({

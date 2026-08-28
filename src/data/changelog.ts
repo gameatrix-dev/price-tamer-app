@@ -7,6 +7,22 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-28",
+    version: "1.2.7",
+    changes: [
+      "Dodano: Zestaw do szycia — 1000 (Narzędzia)",
+      "Dodano: Nawóz organiczny — 500 (Chemia)",
+      "Dodano: Konopie (1 pąk) — 200 (Chemia)",
+      "Dodano: Paczka herbaty — 200 (Obóz)",
+      "Dodano: Rękawice medyczne — 300 (Medyczne)",
+      "Dodano: Dzika róża — 100 (Loot)",
+      "Dodano: Długopis — 200 (Loot)",
+      "Dodano: Garnek — 300 (Obóz)",
+      "Zmiana ceny: Liść aloesu — 200",
+      "Zmiana ceny: Strzykawki — 200",
+    ],
+  },
+  {
     date: "2026-08-26",
     version: "1.2.6",
     changes: [
