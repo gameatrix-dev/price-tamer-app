@@ -137,4 +137,7 @@ export const ITEMS: Item[] = [
   { name: "Dzika róża", category: "Loot", price: 100 },
   { name: "Długopis", category: "Loot", price: 200 },
   { name: "Garnek", category: "Obóz", price: 300 },
+  { name: "Kamizelka kuloodporna (w dobrym stanie)", category: "Loot", price: 2000 },
+  { name: "Ciężka kamizelka taktyczna (w dobrym stanie)", category: "Loot", price: 5000 },
+  { name: "Hełm k6", category: "Loot", price: 5000 },
 ];

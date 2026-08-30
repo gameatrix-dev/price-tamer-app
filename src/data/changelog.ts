@@ -7,6 +7,15 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-08-30",
+    version: "1.2.7",
+    changes: [
+      "Dodano: Kamizelka kuloodporna (w dobrym stanie) — 2000 (Loot)",
+      "Dodano: Ciężka kamizelka taktyczna (w dobrym stanie) — 5000 (Loot)",
+      "Dodano: Hełm k6 — 5000 (Loot)",
+    ],
+  },
+  {
     date: "2026-08-28",
     version: "1.2.7",
     changes: [
