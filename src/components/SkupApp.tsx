@@ -14,6 +14,8 @@ import { CATEGORIES, ITEMS, type Category } from "@/data/items";
 import { CHANGELOG } from "@/data/changelog";
 import LockSettings from "@/components/LockSettings";
 import { useItemLocks } from "@/hooks/useItemLocks";
+import { useAnnouncement } from "@/hooks/useAnnouncement";
+
 import heroImg from "@/assets/scum-hero.jpg";
 import catChemia from "@/assets/cat-chemia.jpg";
 import catElektronika from "@/assets/cat-elektronika.jpg";
@@ -52,6 +54,9 @@ export default function SkupApp() {
   const [stamp, setStamp] = useState("");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { locks, isLocked, saveLocks, verifyPin } = useItemLocks();
+  const { announcement, saveAnnouncement } = useAnnouncement();
+  const [popupOpen, setPopupOpen] = useState(true);
+
   const captureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -568,9 +573,42 @@ export default function SkupApp() {
           locks={locks}
           saveLocks={saveLocks}
           verifyPin={verifyPin}
+          announcement={announcement}
+          saveAnnouncement={saveAnnouncement}
           onClose={() => setSettingsOpen(false)}
         />
       )}
+      {announcement.enabled && popupOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded border border-border bg-card">
+            <div className="h-2 hazard-bar" />
+            <div className="space-y-3 p-6">
+              <h2
+                className={`text-lg font-semibold uppercase tracking-wide ${
+                  announcement.status === "open"
+                    ? "text-primary"
+                    : "text-destructive"
+                }`}
+              >
+                {announcement.status === "open"
+                  ? "Skup czynny"
+                  : "Skup nieczynny"}
+              </h2>
+              <p className="whitespace-pre-line text-sm text-foreground">
+                {announcement.text}
+              </p>
+              <button
+                type="button"
+                onClick={() => setPopupOpen(false)}
+                className="rounded border border-border px-4 py-2 text-xs uppercase tech text-foreground hover:bg-accent/30"
+              >
+                Rozumiem
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
