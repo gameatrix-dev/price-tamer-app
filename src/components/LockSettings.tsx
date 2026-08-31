@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
-import { KeyRound, Loader2, Lock, Search, Unlock, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { KeyRound, Loader2, Lock, Megaphone, Search, Unlock, X } from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import type { Announcement } from "@/hooks/useAnnouncement";
 
 const nf = new Intl.NumberFormat("pl-PL");
 
@@ -12,6 +13,11 @@ interface Props {
     updates: { name: string; locked: boolean }[],
   ) => Promise<{ ok: boolean; error?: string }>;
   verifyPin: (pin: string) => Promise<{ ok: boolean; error?: string }>;
+  announcement: Announcement;
+  saveAnnouncement: (
+    pin: string,
+    next: Announcement,
+  ) => Promise<{ ok: boolean; error?: string }>;
   onClose: () => void;
 }
 
@@ -19,6 +25,8 @@ export default function LockSettings({
   locks,
   saveLocks,
   verifyPin,
+  announcement,
+  saveAnnouncement,
   onClose,
 }: Props) {
   const [pin, setPin] = useState("");
@@ -28,6 +36,23 @@ export default function LockSettings({
   const [busy, setBusy] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "Wszystkie">("Wszystkie");
+
+  const [draft, setDraft] = useState<Announcement>(announcement);
+  const [savingMsg, setSavingMsg] = useState(false);
+  const [savedMsg, setSavedMsg] = useState(false);
+
+  useEffect(() => setDraft(announcement), [announcement]);
+
+  const submitAnnouncement = async () => {
+    setSavingMsg(true);
+    setSavedMsg(false);
+    setError("");
+    const res = await saveAnnouncement(pin, draft);
+    setSavingMsg(false);
+    if (res.ok) setSavedMsg(true);
+    else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
