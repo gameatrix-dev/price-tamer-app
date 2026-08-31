@@ -194,6 +194,33 @@ export default function SkupApp() {
         </div>
       </header>
 
+      {announcement.enabled && (
+        <div
+          className={`border-b px-4 py-3 ${
+            announcement.status === "open"
+              ? "border-primary/40 bg-primary/10"
+              : "border-destructive/40 bg-destructive/10"
+          }`}
+        >
+          <div className="mx-auto flex max-w-[1500px] items-start gap-3">
+            <span
+              className={`shrink-0 rounded border px-2 py-0.5 text-[10px] uppercase tech ${
+                announcement.status === "open"
+                  ? "border-primary text-primary"
+                  : "border-destructive text-destructive"
+              }`}
+            >
+              {announcement.status === "open" ? "Skup czynny" : "Skup nieczynny"}
+            </span>
+            <p className="whitespace-pre-line text-sm text-foreground">
+              {announcement.text}
+            </p>
+          </div>
+        </div>
+      )}
+
+
+
       <main className="mx-auto grid max-w-[1500px] gap-6 px-4 py-8 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)_340px]">
         <aside className="order-2 lg:order-none lg:sticky lg:top-6 lg:self-start lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto">
           <div className="rounded border border-border bg-card p-4">
