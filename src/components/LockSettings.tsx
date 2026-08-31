@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
-import { KeyRound, Loader2, Lock, Search, Unlock, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { KeyRound, Loader2, Lock, Megaphone, Search, Unlock, X } from "lucide-react";
 
 import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import type { Announcement } from "@/hooks/useAnnouncement";
 
 const nf = new Intl.NumberFormat("pl-PL");
 
@@ -12,6 +13,11 @@ interface Props {
     updates: { name: string; locked: boolean }[],
   ) => Promise<{ ok: boolean; error?: string }>;
   verifyPin: (pin: string) => Promise<{ ok: boolean; error?: string }>;
+  announcement: Announcement;
+  saveAnnouncement: (
+    pin: string,
+    next: Announcement,
+  ) => Promise<{ ok: boolean; error?: string }>;
   onClose: () => void;
 }
 
@@ -19,6 +25,8 @@ export default function LockSettings({
   locks,
   saveLocks,
   verifyPin,
+  announcement,
+  saveAnnouncement,
   onClose,
 }: Props) {
   const [pin, setPin] = useState("");
@@ -28,6 +36,23 @@ export default function LockSettings({
   const [busy, setBusy] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "Wszystkie">("Wszystkie");
+
+  const [draft, setDraft] = useState<Announcement>(announcement);
+  const [savingMsg, setSavingMsg] = useState(false);
+  const [savedMsg, setSavedMsg] = useState(false);
+
+  useEffect(() => setDraft(announcement), [announcement]);
+
+  const submitAnnouncement = async () => {
+    setSavingMsg(true);
+    setSavedMsg(false);
+    setError("");
+    const res = await saveAnnouncement(pin, draft);
+    setSavingMsg(false);
+    if (res.ok) setSavedMsg(true);
+    else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -116,6 +141,75 @@ export default function LockSettings({
         ) : (
           <>
             <div className="space-y-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2 text-primary">
+                <Megaphone className="size-4" />
+                <h3 className="text-sm font-semibold uppercase tech">
+                  Komunikat o pracy skupu
+                </h3>
+              </div>
+              <label className="flex items-center gap-2 text-xs text-foreground">
+                <input
+                  type="checkbox"
+                  checked={draft.enabled}
+                  onChange={(e) =>
+                    setDraft({ ...draft, enabled: e.target.checked })
+                  }
+                  className="size-4 accent-current"
+                />
+                Pokazuj komunikat wszystkim użytkownikom (okno pop-up + pasek)
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["open", "Skup czynny"],
+                    ["closed", "Skup nieczynny"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setDraft({ ...draft, status: value })}
+                    className={`rounded border px-3 py-1.5 text-[10px] uppercase tech ${
+                      draft.status === value
+                        ? value === "open"
+                          ? "border-primary text-primary"
+                          : "border-destructive text-destructive"
+                        : "border-border text-muted-foreground hover:bg-accent/30"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <textarea
+                value={draft.text}
+                onChange={(e) => setDraft({ ...draft, text: e.target.value })}
+                rows={3}
+                maxLength={500}
+                placeholder="Treść komunikatu, np. Skup czynny tylko w dni parzyste, 18:00–22:00"
+                aria-label="Treść komunikatu"
+                className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+              />
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={submitAnnouncement}
+                  disabled={savingMsg}
+                  className="flex items-center gap-2 rounded border border-primary px-4 py-2 text-xs uppercase tech text-primary disabled:opacity-50"
+                >
+                  {savingMsg && <Loader2 className="size-3.5 animate-spin" />}
+                  Zapisz komunikat
+                </button>
+                {savedMsg && (
+                  <span className="text-[10px] uppercase tech text-primary">
+                    Zapisano
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-3 border-b border-border px-5 py-4">
+
               <p className="text-xs text-muted-foreground">
                 Wyłącz produkt, aby zablokować wpisywanie ilości w cenniku.
                 Zmiany są wspólne — zobaczą je wszyscy użytkownicy aplikacji.
