@@ -105,7 +105,7 @@ export const ITEMS: Item[] = [
   { name: "Karaś — ryba (x5)", category: "Loot", price: 1000 },
   { name: "Szczupak — ryba (x5)", category: "Loot", price: 1000 },
   { name: "Sardynki — ryba (x5)", category: "Loot", price: 1000 },
-  { name: "Agregat prądotwórczy mały", category: "Obóz", price: 3000 },
+  { name: "Agregat prądotwórczy mały", category: "Obóz", price: 4500 },
   { name: "Agregat prądotwórczy duży", category: "Obóz", price: 25000 },
   { name: "Głowa wilka 85%+", category: "Loot", price: 1500 },
   { name: "Głowa kozy 85%+", category: "Loot", price: 1500 },

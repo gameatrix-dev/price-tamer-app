@@ -9,7 +9,10 @@ export const CHANGELOG: ChangeEntry[] = [
   {
     date: "2026-09-07",
     version: "1.2.7",
-    changes: ["Dodano: Korek do wina — 500 (Loot)"],
+    changes: [
+      "Zmiana ceny: Agregat prądotwórczy mały — 4500",
+      "Dodano: Korek do wina — 500 (Loot)",
+    ],
   },
   {
     date: "2026-08-30",
