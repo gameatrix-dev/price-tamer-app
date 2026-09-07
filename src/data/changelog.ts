@@ -7,6 +7,11 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-09-07",
+    version: "1.2.7",
+    changes: ["Dodano: Korek do wina — 500 (Loot)"],
+  },
+  {
     date: "2026-08-30",
     version: "1.2.7",
     changes: [
