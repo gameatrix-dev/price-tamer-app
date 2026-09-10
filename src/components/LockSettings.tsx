@@ -429,6 +429,39 @@ export default function LockSettings({
                         {item.category} · {nf.format(item.price)}
                       </p>
                     </div>
+                    <input
+                      value={priceDrafts[item.name] ?? String(item.price)}
+                      onChange={(e) =>
+                        setPriceDrafts((p) => ({
+                          ...p,
+                          [item.name]: e.target.value,
+                        }))
+                      }
+                      inputMode="numeric"
+                      aria-label={`Cena: ${item.name}`}
+                      className="w-24 shrink-0 rounded border border-border bg-background px-2 py-1.5 text-right text-sm tech outline-none focus:border-primary"
+                    />
+                    <button
+                      type="button"
+                      disabled={
+                        busy !== null || priceDrafts[item.name] === undefined
+                      }
+                      onClick={() => savePrice(item)}
+                      className="shrink-0 rounded border border-primary px-3 py-1.5 text-[10px] uppercase tech text-primary disabled:opacity-40"
+                    >
+                      Zapisz
+                    </button>
+                    {isCustom(item.name) && (
+                      <button
+                        type="button"
+                        disabled={busy !== null}
+                        onClick={() => deleteProduct(item.name)}
+                        aria-label={`Usuń: ${item.name}`}
+                        className="shrink-0 rounded border border-destructive px-2 py-1.5 text-destructive disabled:opacity-40"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
                     <button
                       type="button"
                       disabled={busy !== null}
