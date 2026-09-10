@@ -230,10 +230,21 @@ export default function SkupApp() {
               Ostatnie zmiany w cenniku
             </h2>
             <ul className="mt-3 space-y-3">
-              {CHANGELOG.map((entry) => (
-                <li key={entry.version}>
+              {[
+                ...catalogLog.map((e) => ({
+                  key: `live-${e.date}`,
+                  label: e.date,
+                  changes: e.changes,
+                })),
+                ...CHANGELOG.map((e) => ({
+                  key: e.version + e.date,
+                  label: `${e.date} · v${e.version}`,
+                  changes: e.changes,
+                })),
+              ].map((entry) => (
+                <li key={entry.key}>
                   <p className="text-[10px] uppercase tech text-muted-foreground">
-                    {entry.date} · v{entry.version}
+                    {entry.label}
                   </p>
                   <ul className="mt-1 space-y-0.5">
                     {entry.changes.map((c) => (
