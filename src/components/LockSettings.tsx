@@ -42,6 +42,9 @@ interface Props {
 }
 
 export default function LockSettings({
+  items,
+  saveItem,
+  removeItem,
   locks,
   saveLocks,
   verifyPin,
@@ -76,14 +79,77 @@ export default function LockSettings({
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ITEMS.filter(
-      (i) =>
-        (category === "Wszystkie" || i.category === category) &&
-        (q === "" || i.name.toLowerCase().includes(q)),
-    ).sort((a, b) => a.name.localeCompare(b.name, "pl"));
-  }, [query, category]);
+    return items
+      .filter(
+        (i) =>
+          (category === "Wszystkie" || i.category === category) &&
+          (q === "" || i.name.toLowerCase().includes(q)),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name, "pl"));
+  }, [items, query, category]);
 
-  const lockedCount = ITEMS.filter((i) => locks[i.name]).length;
+  const lockedCount = items.filter((i) => locks[i.name]).length;
+
+  // ——— Edytor produktów ———
+  const [newName, setNewName] = useState("");
+  const [newCategory, setNewCategory] = useState<Category>("Loot");
+  const [newPrice, setNewPrice] = useState("");
+  const [savingNew, setSavingNew] = useState(false);
+  const [priceDrafts, setPriceDrafts] = useState<Record<string, string>>({});
+
+  const isCustom = (name: string) => !ITEMS.some((i) => i.name === name);
+
+  const addProduct = async () => {
+    const price = Number(newPrice);
+    if (!newName.trim() || !Number.isFinite(price) || price < 0) {
+      setError("Podaj nazwę i poprawną cenę.");
+      return;
+    }
+    setSavingNew(true);
+    setError("");
+    const res = await saveItem(pin, {
+      name: newName.trim(),
+      category: newCategory,
+      price,
+    });
+    setSavingNew(false);
+    if (res.ok) {
+      setNewName("");
+      setNewPrice("");
+    } else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
+  const savePrice = async (item: Item) => {
+    const raw = priceDrafts[item.name];
+    const price = Number(raw);
+    if (raw === undefined || !Number.isFinite(price) || price < 0) {
+      setError("Podaj poprawną cenę.");
+      return;
+    }
+    setBusy(item.name);
+    setError("");
+    const res = await saveItem(pin, {
+      name: item.name,
+      category: item.category,
+      price,
+    });
+    setBusy(null);
+    if (res.ok)
+      setPriceDrafts((prev) => {
+        const next = { ...prev };
+        delete next[item.name];
+        return next;
+      });
+    else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
+  const deleteProduct = async (name: string) => {
+    setBusy(name);
+    setError("");
+    const res = await removeItem(pin, name);
+    setBusy(null);
+    if (!res.ok) setError(res.error ?? "Nie udało się usunąć.");
+  };
 
   const submitPin = async (e: React.FormEvent) => {
     e.preventDefault();
