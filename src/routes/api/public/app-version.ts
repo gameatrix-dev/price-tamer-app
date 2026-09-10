@@ -9,7 +9,7 @@ const RELEASE = {
   notes:
     "Dodawanie produktów i zmiana cen z poziomu ustawień (PIN) — zmiany zapisują się na serwerze i trafiają automatycznie do changelogu.",
   downloadUrl:
-    "https://price-tamer-app.lovable.app/__l5e/assets-v1/73f33dba-2bec-4fcc-8935-ebe821fd06cb/SkupMachety-windows-x64.zip",
+    "https://price-tamer-app.lovable.app/__l5e/assets-v1/db86f23a-e5ac-4bfb-9532-99712302fe80/SkupMachety-windows-x64.zip",
 };
 
 export const Route = createFileRoute("/api/public/app-version")({
