@@ -1,12 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { KeyRound, Loader2, Lock, Megaphone, Search, Unlock, X } from "lucide-react";
+import {
+  KeyRound,
+  Loader2,
+  Lock,
+  Megaphone,
+  Plus,
+  Search,
+  Tags,
+  Trash2,
+  Unlock,
+  X,
+} from "lucide-react";
 
-import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import { CATEGORIES, ITEMS, type Category, type Item } from "@/data/items";
 import type { Announcement } from "@/hooks/useAnnouncement";
 
 const nf = new Intl.NumberFormat("pl-PL");
 
 interface Props {
+  items: Item[];
+  saveItem: (
+    pin: string,
+    item: { name: string; category: Category; price: number },
+  ) => Promise<{ ok: boolean; error?: string }>;
+  removeItem: (
+    pin: string,
+    name: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
   locks: Record<string, boolean>;
   saveLocks: (
     pin: string,
