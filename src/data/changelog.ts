@@ -7,6 +7,14 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-09-10",
+    version: "1.2.8",
+    changes: [
+      "Nowość: dodawanie produktów i zmiana cen z poziomu ustawień (PIN)",
+      "Zmiany cennika z ustawień trafiają automatycznie do changelogu",
+    ],
+  },
+  {
     date: "2026-09-07",
     version: "1.2.7",
     changes: [
