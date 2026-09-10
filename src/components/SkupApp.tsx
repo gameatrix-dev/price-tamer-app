@@ -10,11 +10,12 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import { CATEGORIES, type Category } from "@/data/items";
 import { CHANGELOG } from "@/data/changelog";
 import LockSettings from "@/components/LockSettings";
 import { useItemLocks } from "@/hooks/useItemLocks";
 import { useAnnouncement } from "@/hooks/useAnnouncement";
+import { useCatalog } from "@/hooks/useCatalog";
 
 import heroImg from "@/assets/scum-hero.jpg";
 import catChemia from "@/assets/cat-chemia.jpg";
@@ -55,6 +56,7 @@ export default function SkupApp() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { locks, isLocked, saveLocks, verifyPin } = useItemLocks();
   const { announcement, saveAnnouncement } = useAnnouncement();
+  const { items, catalogLog, saveItem, removeItem } = useCatalog();
   const [popupOpen, setPopupOpen] = useState(true);
 
   const captureRef = useRef<HTMLDivElement>(null);
