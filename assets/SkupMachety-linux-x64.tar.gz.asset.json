@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "718a7642-b78b-448d-b44f-c52fd0505e5d",
+  "asset_id": "14e1ec85-af07-4657-912e-89130b35c8b9",
   "project_id": "b54de760-c346-412f-ab7b-e7c29bba1427",
-  "url": "/__l5e/assets-v1/718a7642-b78b-448d-b44f-c52fd0505e5d/SkupMachety-linux-x64.tar.gz",
-  "r2_key": "a/v1/b54de760-c346-412f-ab7b-e7c29bba1427/718a7642-b78b-448d-b44f-c52fd0505e5d/SkupMachety-linux-x64.tar.gz",
+  "url": "/__l5e/assets-v1/14e1ec85-af07-4657-912e-89130b35c8b9/SkupMachety-linux-x64.tar.gz",
+  "r2_key": "a/v1/b54de760-c346-412f-ab7b-e7c29bba1427/14e1ec85-af07-4657-912e-89130b35c8b9/SkupMachety-linux-x64.tar.gz",
   "original_filename": "SkupMachety-linux-x64.tar.gz",
-  "size": 126440000,
+  "size": 126435887,
   "content_type": "application/x-gzip",
-  "created_at": "2026-08-28T06:22:12Z"
+  "created_at": "2026-09-10T06:08:26Z"
 }
