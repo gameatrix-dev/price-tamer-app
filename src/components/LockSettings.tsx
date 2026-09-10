@@ -295,7 +295,67 @@ export default function LockSettings({
             </div>
 
             <div className="space-y-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2 text-primary">
+                <Plus className="size-4" />
+                <h3 className="text-sm font-semibold uppercase tech">
+                  Dodaj nowy produkt
+                </h3>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_150px_110px_auto]">
+                <input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Nazwa produktu"
+                  aria-label="Nazwa nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+                <select
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value as Category)}
+                  aria-label="Kategoria nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  inputMode="numeric"
+                  placeholder="Cena"
+                  aria-label="Cena nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm tech outline-none focus:border-primary"
+                />
+                <button
+                  type="button"
+                  onClick={addProduct}
+                  disabled={savingNew}
+                  className="flex items-center justify-center gap-2 rounded border border-primary px-4 py-2 text-xs uppercase tech text-primary disabled:opacity-50"
+                >
+                  {savingNew ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Plus className="size-3.5" />
+                  )}
+                  Dodaj
+                </button>
+              </div>
+              <p className="text-[10px] uppercase tech text-muted-foreground">
+                Każde dodanie produktu i zmiana ceny trafia automatycznie do
+                changelogu z dzisiejszą datą.
+              </p>
+            </div>
 
+            <div className="space-y-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2 text-primary">
+                <Tags className="size-4" />
+                <h3 className="text-sm font-semibold uppercase tech">
+                  Ceny i blokady produktów
+                </h3>
+              </div>
               <p className="text-xs text-muted-foreground">
                 Wyłącz produkt, aby zablokować wpisywanie ilości w cenniku.
                 Zmiany są wspólne — zobaczą je wszyscy użytkownicy aplikacji.
