@@ -1,12 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { KeyRound, Loader2, Lock, Megaphone, Search, Unlock, X } from "lucide-react";
+import {
+  KeyRound,
+  Loader2,
+  Lock,
+  Megaphone,
+  Plus,
+  Search,
+  Tags,
+  Trash2,
+  Unlock,
+  X,
+} from "lucide-react";
 
-import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import { CATEGORIES, ITEMS, type Category, type Item } from "@/data/items";
 import type { Announcement } from "@/hooks/useAnnouncement";
 
 const nf = new Intl.NumberFormat("pl-PL");
 
 interface Props {
+  items: Item[];
+  saveItem: (
+    pin: string,
+    item: { name: string; category: Category; price: number },
+  ) => Promise<{ ok: boolean; error?: string }>;
+  removeItem: (
+    pin: string,
+    name: string,
+  ) => Promise<{ ok: boolean; error?: string }>;
   locks: Record<string, boolean>;
   saveLocks: (
     pin: string,
@@ -22,6 +42,9 @@ interface Props {
 }
 
 export default function LockSettings({
+  items,
+  saveItem,
+  removeItem,
   locks,
   saveLocks,
   verifyPin,
@@ -56,14 +79,77 @@ export default function LockSettings({
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ITEMS.filter(
-      (i) =>
-        (category === "Wszystkie" || i.category === category) &&
-        (q === "" || i.name.toLowerCase().includes(q)),
-    ).sort((a, b) => a.name.localeCompare(b.name, "pl"));
-  }, [query, category]);
+    return items
+      .filter(
+        (i) =>
+          (category === "Wszystkie" || i.category === category) &&
+          (q === "" || i.name.toLowerCase().includes(q)),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name, "pl"));
+  }, [items, query, category]);
 
-  const lockedCount = ITEMS.filter((i) => locks[i.name]).length;
+  const lockedCount = items.filter((i) => locks[i.name]).length;
+
+  // ——— Edytor produktów ———
+  const [newName, setNewName] = useState("");
+  const [newCategory, setNewCategory] = useState<Category>("Loot");
+  const [newPrice, setNewPrice] = useState("");
+  const [savingNew, setSavingNew] = useState(false);
+  const [priceDrafts, setPriceDrafts] = useState<Record<string, string>>({});
+
+  const isCustom = (name: string) => !ITEMS.some((i) => i.name === name);
+
+  const addProduct = async () => {
+    const price = Number(newPrice);
+    if (!newName.trim() || !Number.isFinite(price) || price < 0) {
+      setError("Podaj nazwę i poprawną cenę.");
+      return;
+    }
+    setSavingNew(true);
+    setError("");
+    const res = await saveItem(pin, {
+      name: newName.trim(),
+      category: newCategory,
+      price,
+    });
+    setSavingNew(false);
+    if (res.ok) {
+      setNewName("");
+      setNewPrice("");
+    } else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
+  const savePrice = async (item: Item) => {
+    const raw = priceDrafts[item.name];
+    const price = Number(raw);
+    if (raw === undefined || !Number.isFinite(price) || price < 0) {
+      setError("Podaj poprawną cenę.");
+      return;
+    }
+    setBusy(item.name);
+    setError("");
+    const res = await saveItem(pin, {
+      name: item.name,
+      category: item.category,
+      price,
+    });
+    setBusy(null);
+    if (res.ok)
+      setPriceDrafts((prev) => {
+        const next = { ...prev };
+        delete next[item.name];
+        return next;
+      });
+    else setError(res.error ?? "Zapis nie powiódł się.");
+  };
+
+  const deleteProduct = async (name: string) => {
+    setBusy(name);
+    setError("");
+    const res = await removeItem(pin, name);
+    setBusy(null);
+    if (!res.ok) setError(res.error ?? "Nie udało się usunąć.");
+  };
 
   const submitPin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,7 +179,7 @@ export default function LockSettings({
               Ustawienia skupu
             </h2>
             <p className="text-[10px] uppercase tech text-muted-foreground">
-              Zablokowane pozycje: {lockedCount} / {ITEMS.length}
+              Zablokowane pozycje: {lockedCount} / {items.length}
             </p>
           </div>
           <button
@@ -209,7 +295,67 @@ export default function LockSettings({
             </div>
 
             <div className="space-y-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2 text-primary">
+                <Plus className="size-4" />
+                <h3 className="text-sm font-semibold uppercase tech">
+                  Dodaj nowy produkt
+                </h3>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_150px_110px_auto]">
+                <input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Nazwa produktu"
+                  aria-label="Nazwa nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                />
+                <select
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value as Category)}
+                  aria-label="Kategoria nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                >
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  value={newPrice}
+                  onChange={(e) => setNewPrice(e.target.value)}
+                  inputMode="numeric"
+                  placeholder="Cena"
+                  aria-label="Cena nowego produktu"
+                  className="rounded border border-border bg-background px-3 py-2 text-sm tech outline-none focus:border-primary"
+                />
+                <button
+                  type="button"
+                  onClick={addProduct}
+                  disabled={savingNew}
+                  className="flex items-center justify-center gap-2 rounded border border-primary px-4 py-2 text-xs uppercase tech text-primary disabled:opacity-50"
+                >
+                  {savingNew ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Plus className="size-3.5" />
+                  )}
+                  Dodaj
+                </button>
+              </div>
+              <p className="text-[10px] uppercase tech text-muted-foreground">
+                Każde dodanie produktu i zmiana ceny trafia automatycznie do
+                changelogu z dzisiejszą datą.
+              </p>
+            </div>
 
+            <div className="space-y-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2 text-primary">
+                <Tags className="size-4" />
+                <h3 className="text-sm font-semibold uppercase tech">
+                  Ceny i blokady produktów
+                </h3>
+              </div>
               <p className="text-xs text-muted-foreground">
                 Wyłącz produkt, aby zablokować wpisywanie ilości w cenniku.
                 Zmiany są wspólne — zobaczą je wszyscy użytkownicy aplikacji.
@@ -271,9 +417,9 @@ export default function LockSettings({
                 return (
                   <li
                     key={item.name}
-                    className="flex items-center justify-between gap-3 border-b border-border px-5 py-2.5 last:border-0"
+                    className="flex flex-wrap items-center gap-2 border-b border-border px-5 py-2.5 last:border-0"
                   >
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p
                         className={`truncate text-sm ${locked ? "text-muted-foreground line-through" : "text-foreground"}`}
                       >
@@ -283,6 +429,39 @@ export default function LockSettings({
                         {item.category} · {nf.format(item.price)}
                       </p>
                     </div>
+                    <input
+                      value={priceDrafts[item.name] ?? String(item.price)}
+                      onChange={(e) =>
+                        setPriceDrafts((p) => ({
+                          ...p,
+                          [item.name]: e.target.value,
+                        }))
+                      }
+                      inputMode="numeric"
+                      aria-label={`Cena: ${item.name}`}
+                      className="w-24 shrink-0 rounded border border-border bg-background px-2 py-1.5 text-right text-sm tech outline-none focus:border-primary"
+                    />
+                    <button
+                      type="button"
+                      disabled={
+                        busy !== null || priceDrafts[item.name] === undefined
+                      }
+                      onClick={() => savePrice(item)}
+                      className="shrink-0 rounded border border-primary px-3 py-1.5 text-[10px] uppercase tech text-primary disabled:opacity-40"
+                    >
+                      Zapisz
+                    </button>
+                    {isCustom(item.name) && (
+                      <button
+                        type="button"
+                        disabled={busy !== null}
+                        onClick={() => deleteProduct(item.name)}
+                        aria-label={`Usuń: ${item.name}`}
+                        className="shrink-0 rounded border border-destructive px-2 py-1.5 text-destructive disabled:opacity-40"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
                     <button
                       type="button"
                       disabled={busy !== null}

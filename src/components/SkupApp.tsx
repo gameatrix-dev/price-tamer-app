@@ -10,11 +10,12 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { CATEGORIES, ITEMS, type Category } from "@/data/items";
+import { CATEGORIES, type Category } from "@/data/items";
 import { CHANGELOG } from "@/data/changelog";
 import LockSettings from "@/components/LockSettings";
 import { useItemLocks } from "@/hooks/useItemLocks";
 import { useAnnouncement } from "@/hooks/useAnnouncement";
+import { useCatalog } from "@/hooks/useCatalog";
 
 import heroImg from "@/assets/scum-hero.jpg";
 import catChemia from "@/assets/cat-chemia.jpg";
@@ -55,6 +56,7 @@ export default function SkupApp() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { locks, isLocked, saveLocks, verifyPin } = useItemLocks();
   const { announcement, saveAnnouncement } = useAnnouncement();
+  const { items, catalogLog, saveItem, removeItem } = useCatalog();
   const [popupOpen, setPopupOpen] = useState(true);
 
   const captureRef = useRef<HTMLDivElement>(null);
@@ -65,7 +67,7 @@ export default function SkupApp() {
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ITEMS.filter(
+    return items.filter(
       (i) =>
         (category === "Wszystkie" || i.category === category) &&
         (q === "" || i.name.toLowerCase().includes(q)),
@@ -76,7 +78,7 @@ export default function SkupApp() {
     );
   }, [query, category, asc]);
 
-  const selected = ITEMS.filter(
+  const selected = items.filter(
     (i) => !isLocked(i.name) && (qty[i.name] ?? 0) > 0,
   ).map((i) => {
     const n = qty[i.name] ?? 0;
@@ -181,7 +183,7 @@ export default function SkupApp() {
               SCUM · Punkt skupu
             </h1>
             <p className="mt-1 text-xs uppercase tech text-muted-foreground">
-              Cennik operacyjny // {ITEMS.length} pozycji w bazie
+              Cennik operacyjny // {items.length} pozycji w bazie
             </p>
           </div>
           <button
@@ -228,10 +230,21 @@ export default function SkupApp() {
               Ostatnie zmiany w cenniku
             </h2>
             <ul className="mt-3 space-y-3">
-              {CHANGELOG.map((entry) => (
-                <li key={entry.version}>
+              {[
+                ...catalogLog.map((e) => ({
+                  key: `live-${e.date}`,
+                  label: e.date,
+                  changes: e.changes,
+                })),
+                ...CHANGELOG.map((e) => ({
+                  key: e.version + e.date,
+                  label: `${e.date} · v${e.version}`,
+                  changes: e.changes,
+                })),
+              ].map((entry) => (
+                <li key={entry.key}>
                   <p className="text-[10px] uppercase tech text-muted-foreground">
-                    {entry.date} · v{entry.version}
+                    {entry.label}
                   </p>
                   <ul className="mt-1 space-y-0.5">
                     {entry.changes.map((c) => (
@@ -597,6 +610,9 @@ export default function SkupApp() {
       </div>
       {settingsOpen && (
         <LockSettings
+          items={items}
+          saveItem={saveItem}
+          removeItem={removeItem}
           locks={locks}
           saveLocks={saveLocks}
           verifyPin={verifyPin}

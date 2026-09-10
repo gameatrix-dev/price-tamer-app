@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicAnnouncementRouteImport } from './routes/api/public/announcement'
 import { Route as ApiPublicAppVersionRouteImport } from './routes/api/public/app-version'
+import { Route as ApiPublicCatalogRouteImport } from './routes/api/public/catalog'
 import { Route as ApiPublicItemLocksRouteImport } from './routes/api/public/item-locks'
 
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +30,11 @@ const ApiPublicAppVersionRoute = ApiPublicAppVersionRouteImport.update({
   path: '/api/public/app-version',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCatalogRoute = ApiPublicCatalogRouteImport.update({
+  id: '/api/public/catalog',
+  path: '/api/public/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicItemLocksRoute = ApiPublicItemLocksRouteImport.update({
   id: '/api/public/item-locks',
   path: '/api/public/item-locks',
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/public/announcement': typeof ApiPublicAnnouncementRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/catalog': typeof ApiPublicCatalogRoute
   '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/public/announcement': typeof ApiPublicAnnouncementRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/catalog': typeof ApiPublicCatalogRoute
   '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRoutesById {
@@ -52,6 +60,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/api/public/announcement': typeof ApiPublicAnnouncementRoute
   '/api/public/app-version': typeof ApiPublicAppVersionRoute
+  '/api/public/catalog': typeof ApiPublicCatalogRoute
   '/api/public/item-locks': typeof ApiPublicItemLocksRoute
 }
 export interface FileRouteTypes {
@@ -60,18 +69,21 @@ export interface FileRouteTypes {
     | '/'
     | '/api/public/announcement'
     | '/api/public/app-version'
+    | '/api/public/catalog'
     | '/api/public/item-locks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/api/public/announcement'
     | '/api/public/app-version'
+    | '/api/public/catalog'
     | '/api/public/item-locks'
   id:
     | '__root__'
     | '/'
     | '/api/public/announcement'
     | '/api/public/app-version'
+    | '/api/public/catalog'
     | '/api/public/item-locks'
   fileRoutesById: FileRoutesById
 }
@@ -79,6 +91,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiPublicAnnouncementRoute: typeof ApiPublicAnnouncementRoute
   ApiPublicAppVersionRoute: typeof ApiPublicAppVersionRoute
+  ApiPublicCatalogRoute: typeof ApiPublicCatalogRoute
   ApiPublicItemLocksRoute: typeof ApiPublicItemLocksRoute
 }
 
@@ -105,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAppVersionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/catalog': {
+      id: '/api/public/catalog'
+      path: '/api/public/catalog'
+      fullPath: '/api/public/catalog'
+      preLoaderRoute: typeof ApiPublicCatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/item-locks': {
       id: '/api/public/item-locks'
       path: '/api/public/item-locks'
@@ -119,6 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiPublicAnnouncementRoute: ApiPublicAnnouncementRoute,
   ApiPublicAppVersionRoute: ApiPublicAppVersionRoute,
+  ApiPublicCatalogRoute: ApiPublicCatalogRoute,
   ApiPublicItemLocksRoute: ApiPublicItemLocksRoute,
 }
 export const routeTree = rootRouteImport
