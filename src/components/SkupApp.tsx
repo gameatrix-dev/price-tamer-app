@@ -610,6 +610,9 @@ export default function SkupApp() {
       </div>
       {settingsOpen && (
         <LockSettings
+          items={items}
+          saveItem={saveItem}
+          removeItem={removeItem}
           locks={locks}
           saveLocks={saveLocks}
           verifyPin={verifyPin}
