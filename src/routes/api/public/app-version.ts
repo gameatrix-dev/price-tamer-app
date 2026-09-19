@@ -5,9 +5,9 @@ import { ITEMS } from "@/data/items";
 // Publiczny feed aktualizacji dla aplikacji desktopowej (Electron).
 // Podbij `version` i `downloadUrl` przy każdym nowym wydaniu EXE.
 const RELEASE = {
-  version: "1.2.8",
+  version: "1.2.9",
   notes:
-    "Dodawanie produktów i zmiana cen z poziomu ustawień (PIN) — zmiany zapisują się na serwerze i trafiają automatycznie do changelogu.",
+    "Aktualny cennik i ustawienia — edycje produktów i cen zapisują się na serwerze i utrzymują po odświeżeniu.",
   downloadUrl:
     "https://price-tamer-app.lovable.app/__l5e/assets-v1/db86f23a-e5ac-4bfb-9532-99712302fe80/SkupMachety-windows-x64.zip",
 };
