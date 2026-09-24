@@ -135,7 +135,7 @@ export const ITEMS: Item[] = [
   { name: "Paczka herbaty", category: "Obóz", price: 200 },
   { name: "Rękawice medyczne", category: "Medyczne", price: 300 },
   { name: "Dzika róża", category: "Loot", price: 100 },
-  { name: "Długopis", category: "Loot", price: 200 },
+  { name: "Długopis (min 50%)", category: "Loot", price: 200 },
   { name: "Garnek", category: "Obóz", price: 300 },
   { name: "Kamizelka kuloodporna (w dobrym stanie)", category: "Loot", price: 2000 },
   { name: "Ciężka kamizelka taktyczna (w dobrym stanie)", category: "Loot", price: 5000 },

@@ -7,6 +7,11 @@ export interface ChangeEntry {
 // Najnowsze wpisy na górze — dopisuj tutaj przy każdej zmianie cennika.
 export const CHANGELOG: ChangeEntry[] = [
   {
+    date: "2026-09-24",
+    version: "1.2.9",
+    changes: ["Zmiana nazwy: Długopis → Długopis (min 50%)"],
+  },
+  {
     date: "2026-09-19",
     version: "1.2.9",
     changes: [
